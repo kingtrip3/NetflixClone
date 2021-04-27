@@ -5,27 +5,28 @@ import { Entypo, AntDesign } from '@expo/vector-icons'
 import { Text, View } from '../../components/Themed'
 import styles from './styles'
 import {Picker} from '@react-native-picker/picker';
+import VideoPlayer from '../../components/VideoPlayer'
 
 
 import movie from '../../assets/data/movie'
 import EpisodeItem from '../../components/EpisodeItem';
 
 const firstSeason = movie.seasons.items[0]
-const firstEpisode = movie.seasons.items[0].episodes.items[0]
+const firstEpisode = firstSeason.episodes.items[0]
 
-const MovieDetailsSreen = () => {
-    const [currentSeason, setCurrentSeason] = useState(firstSeason)
-    
-    const seasonNames = movie.seasons.items.map(season => season.name);
+const MovieDetailsScreen = () => {
+    const[currentSeason, setCurrentSeason] = useState(firstSeason)
+    const[currentEpisode, setCurrentEpisode] = useState(firstSeason.episodes.items[0])
+    const seasonName = movie.seasons.items.map(season => season.name);
 
     return (
         <View style={{ margin: 10 }}>
-            <Image style={styles.image} source={{ uri: firstEpisode.poster}} />
+            <VideoPlayer episode= { currentEpisode } />
 
             
             <FlatList 
                 data={currentSeason.episodes.items}
-                renderItem={({ item }) => <EpisodeItem episode={item}/> }
+                renderItem={({ item }) => (<EpisodeItem episode={item} onPress={setCurrentEpisode}/> )}
                 style={{marginBottom: 250}}
                 ListHeaderComponent={(
                 <View style={{ padding: 12 }}>
@@ -85,7 +86,7 @@ const MovieDetailsSreen = () => {
                         dropdownIconColor={'white'}
                         >
                             
-                        {seasonNames.map(seasonName => (
+                        {seasonName.map(seasonName => (
                             <Picker.Item label={seasonName} value={seasonName} key={seasonName} color="red"/>
                         ))}
                         
@@ -97,4 +98,4 @@ const MovieDetailsSreen = () => {
     )
 }
 
-export default  MovieDetailsSreen;
+export default  MovieDetailsScreen;
